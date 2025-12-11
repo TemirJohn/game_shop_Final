@@ -28,8 +28,15 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
     private List<Permission> permissions;
-    @OneToMany(mappedBy = "user")
-    private List<Ownership> library;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_games",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "game_id")
+    )
+    private List<Game> games;
+
 
     @OneToMany(mappedBy = "user")
     private List<Review> reviews;

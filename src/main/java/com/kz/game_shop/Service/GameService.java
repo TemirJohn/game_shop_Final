@@ -1,12 +1,15 @@
 package com.kz.game_shop.Service;
 
+import com.kz.game_shop.dto.GameDto;
 import com.kz.game_shop.entity.Game;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface GameService {
-    List<Game> getAllGames();
-    Game getGameById(Long id);
-    Game createGame(Game game, Long categoryId);
+    List<GameDto> getAllGames();
+    GameDto getGameById(Long id);
+    GameDto createGame(GameDto game, MultipartFile imageFile) throws IOException;
     void deleteGame(Long id);
 }

@@ -1,12 +1,18 @@
 package com.kz.game_shop.Service.impl;
-import com.kz.game_shop.Repository.CategoryRepository;
-import com.kz.game_shop.Repository.GameRepository;
-import com.kz.game_shop.Service.CategoryService;
+
 import com.kz.game_shop.Service.GameService;
+import com.kz.game_shop.dto.GameDto;
 import com.kz.game_shop.entity.Category;
 import com.kz.game_shop.entity.Game;
+import com.kz.game_shop.mapper.GameMapper;
+import com.kz.game_shop.Repository.CategoryRepository;
+import com.kz.game_shop.Repository.GameRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,23 +21,48 @@ public class GameServiceImpl implements GameService {
 
     private final GameRepository gameRepository;
     private final CategoryRepository categoryRepository;
+    private final GameMapper gameMapper;
 
-    public List<Game> getAllGames() {
-        return gameRepository.findAll();
+    @Override
+    public List<GameDto> getAllGames() {
+        List<Game> games = gameRepository.findAll();
+        List<GameDto> gameDtos = new ArrayList<>();
+
+        for (Game game : games) {
+            gameDtos.add(gameMapper.toDto(game));
+        }
+        return gameDtos;
     }
 
-    public Game getGameById(Long id) {
-        return gameRepository.findById(id).orElseThrow(() -> new RuntimeException("Game not found"));
+    @Override
+    public GameDto getGameById(Long id) {
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Game not found"));
+        return gameMapper.toDto(game);
     }
 
-    public Game createGame(Game game, Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-        game.setCategory(category);
-        return gameRepository.save(game);
+
+    public GameDto createGame(GameDto gameDto, MultipartFile imageFile) throws IOException {
+        Game game = gameMapper.toEntity(gameDto);
+
+        if (gameDto.getCategoryId() != null) {
+            Category category = categoryRepository.findById(gameDto.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found"));
+            game.setCategory(category);
+        }
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+
+            game.setImageUrl("/uploads/" + imageFile.getOriginalFilename());
+        }
+
+        Game savedGame = gameRepository.save(game);
+        return gameMapper.toDto(savedGame);
     }
 
+    @Override
     public void deleteGame(Long id) {
         gameRepository.deleteById(id);
     }
+
 }
