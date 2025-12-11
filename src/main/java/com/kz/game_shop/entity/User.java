@@ -20,8 +20,14 @@ public class User implements UserDetails {
     private String username;
     private String email;
     private String password;
-    private String role;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_permissions",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
+    private List<Permission> permissions;
     @OneToMany(mappedBy = "user")
     private List<Ownership> library;
 
@@ -30,7 +36,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(role));
+        return permissions;
     }
 
     @Override public boolean isAccountNonExpired() { return true; }
