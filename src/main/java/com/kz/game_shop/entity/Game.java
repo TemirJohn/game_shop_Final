@@ -15,6 +15,8 @@ public class Game {
     private String description;
     private Double price;
 
+    private String imageUrl;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
