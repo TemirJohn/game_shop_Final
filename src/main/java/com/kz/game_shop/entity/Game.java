@@ -23,7 +23,4 @@ public class Game {
 
     @OneToMany(mappedBy = "game")
     private List<Review> reviews;
-
-    @OneToMany(mappedBy = "game")
-    private List<Ownership> owners;
 }
