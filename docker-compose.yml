@@ -1,0 +1,35 @@
+services:
+  final-back:
+    build: .
+    container_name: 'final-back'
+    depends_on:
+      - final-database
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://final-database:5432/game_shop
+      - SPRING_DATASOURCE_USERNAME=temirzhan
+      - SPRING_DATASOURCE_PASSWORD=11466795
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+    ports:
+      - "8888:8080"
+
+  final-database:
+    image: postgres:15
+    container_name: "final-database"
+    environment:
+      - POSTGRES_USER=temirzhan
+      - POSTGRES_PASSWORD=11466795
+      - POSTGRES_DB=game_shop
+    ports:
+      - "2345:5432"
+
+
+  test-database-final:
+    image: postgres:15
+    container_name: "test-database-final"
+    environment:
+      - POSTGRES_USER=temirzhan
+      - POSTGRES_PASSWORD=11466795
+      - POSTGRES_DB=game_shop
+    ports:
+      - 2346:5432
