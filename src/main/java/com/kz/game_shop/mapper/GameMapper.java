@@ -10,6 +10,6 @@ public interface GameMapper {
     @Mapping(source = "category.id", target = "categoryId")
     GameDto toDto(Game game);
 
-    @Mapping(target = "category", ignore = true) // Категорию находим в сервисе по ID
+    @Mapping(target = "category", ignore = true)
     Game toEntity(GameDto gameDto);
 }
