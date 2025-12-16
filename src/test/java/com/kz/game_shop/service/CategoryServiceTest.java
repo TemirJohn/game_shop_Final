@@ -31,6 +31,33 @@ public class CategoryServiceTest {
     }
 
     @Test
+    void getCategoryById() {
+        List<CategoryDto> allCategories = categoryService.getAllCategories();
+        Assertions.assertFalse(allCategories.isEmpty());
+
+        CategoryDto randomCategory = allCategories.get(new Random().nextInt(allCategories.size()));
+
+        CategoryDto fetchedCategory = categoryService.getCategoryById(randomCategory.getId());
+
+        Assertions.assertNotNull(fetchedCategory);
+        Assertions.assertEquals(randomCategory.getId(), fetchedCategory.getId());
+        Assertions.assertEquals(randomCategory.getName(), fetchedCategory.getName());
+    }
+
+    @Test
+    void updateCategory() {
+        CategoryDto dto = new CategoryDto();
+        dto.setName("Old Name");
+        CategoryDto saved = categoryService.createCategory(dto);
+
+        saved.setName("Updated Name");
+        CategoryDto updated = categoryService.updateCategory(saved.getId(), saved);
+
+        Assertions.assertEquals("Updated Name", updated.getName());
+        Assertions.assertEquals(saved.getId(), updated.getId());
+    }
+
+    @Test
     void deleteCategory() {
         Random random = new Random();
         List<CategoryDto> allCategories = categoryService.getAllCategories();
@@ -42,9 +69,6 @@ public class CategoryServiceTest {
         categoryService.deleteCategory(someIndex);
 
         List<CategoryDto> categoriesAfterDelete = categoryService.getAllCategories();
-        boolean exists = categoriesAfterDelete.stream()
-                .anyMatch(c -> c.getId().equals(someIndex));
-
-        Assertions.assertFalse(exists);
+        Assertions.assertNull(categoriesAfterDelete);
     }
 }

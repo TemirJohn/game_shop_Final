@@ -7,9 +7,9 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = {CategoryMapper.class})
 public interface GameMapper {
-    @Mapping(source = "category.id", target = "categoryId")
     GameDto toDto(Game game);
 
     @Mapping(target = "category", ignore = true)
+    @Mapping(target = "reviews", ignore = true)
     Game toEntity(GameDto gameDto);
 }
