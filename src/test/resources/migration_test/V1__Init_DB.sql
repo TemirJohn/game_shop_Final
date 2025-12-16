@@ -10,26 +10,9 @@ CREATE TABLE permissions (
 
 CREATE TABLE users (
                        id BIGSERIAL PRIMARY KEY,
+                       username VARCHAR(255),
                        email VARCHAR(255),
-                       password VARCHAR(255),
-                       username VARCHAR(255)
-);
-
-CREATE TABLE game (
-                      id BIGSERIAL PRIMARY KEY,
-                      description VARCHAR(255),
-                      image_url VARCHAR(255),
-                      price DOUBLE PRECISION,
-                      title VARCHAR(255),
-                      category_id BIGINT REFERENCES category(id)
-);
-
-CREATE TABLE review (
-                        id BIGSERIAL PRIMARY KEY,
-                        content VARCHAR(255),
-                        rating INTEGER,
-                        game_id BIGINT REFERENCES game(id),
-                        user_id BIGINT REFERENCES users(id)
+                       password VARCHAR(255)
 );
 
 CREATE TABLE user_permissions (
@@ -37,10 +20,24 @@ CREATE TABLE user_permissions (
                                   permission_id BIGINT NOT NULL REFERENCES permissions(id)
 );
 
+CREATE TABLE game (
+                      id BIGSERIAL PRIMARY KEY,
+                      title VARCHAR(255),
+                      description VARCHAR(255),
+                      price DOUBLE PRECISION,
+                      image_url VARCHAR(255),
+                      category_id BIGINT REFERENCES category(id)
+);
+
 CREATE TABLE user_games (
                             user_id BIGINT NOT NULL REFERENCES users(id),
                             game_id BIGINT NOT NULL REFERENCES game(id)
 );
 
-INSERT INTO permissions (name) VALUES ('ROLE_USER');
-INSERT INTO category (name) VALUES ('RPG'), ('Shooter'), ('Strategy');
+CREATE TABLE review (
+                        id BIGSERIAL PRIMARY KEY,
+                        content VARCHAR(255),
+                        rating INTEGER,
+                        user_id BIGINT REFERENCES users(id),
+                        game_id BIGINT REFERENCES game(id)
+);

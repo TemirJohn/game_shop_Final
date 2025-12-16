@@ -51,10 +51,6 @@ public class GameServiceImpl implements GameService {
             game.setCategory(category);
         }
 
-        if (imageFile != null && !imageFile.isEmpty()) {
-
-            game.setImageUrl("/uploads/" + imageFile.getOriginalFilename());
-        }
 
         Game savedGame = gameRepository.save(game);
         return gameMapper.toDto(savedGame);
