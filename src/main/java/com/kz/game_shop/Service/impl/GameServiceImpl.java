@@ -41,7 +41,7 @@ public class GameServiceImpl implements GameService {
     }
 
 
-    public GameDto createGame(GameDto gameDto, MultipartFile imageFile) {
+    public GameDto createGame(GameDto gameDto) {
         Game game = gameMapper.toEntity(gameDto);
 
         if (gameDto.getCategoryId() != null) {

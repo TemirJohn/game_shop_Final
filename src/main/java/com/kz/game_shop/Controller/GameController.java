@@ -33,20 +33,17 @@ public class GameController {
             @RequestParam("title") String title,
             @RequestParam("description") String description,
             @RequestParam("price") Double price,
-            @RequestParam("categoryId") Long categoryId,
-            @RequestParam(value = "image", required = false) MultipartFile image
-    ) throws IOException {
-
+            @RequestParam("categoryId") Long categoryId
+    ) {
         GameDto gameDto = new GameDto();
         gameDto.setTitle(title);
         gameDto.setDescription(description);
         gameDto.setPrice(price);
         gameDto.setCategoryId(categoryId);
 
-        return new ResponseEntity<>(gameService.createGame(gameDto, image), HttpStatus.OK);
+        return new ResponseEntity<>(gameService.createGame(gameDto), HttpStatus.OK);
     }
 
-    // Реализовано как в StudentController (try-catch)
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteGame(@PathVariable Long id) {
         try {
