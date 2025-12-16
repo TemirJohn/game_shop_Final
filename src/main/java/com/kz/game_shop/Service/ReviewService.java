@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface ReviewService {
     List<ReviewDto> getReviewsByGame(Long gameId);
+    ReviewDto getReviewById(Long id);
+    ReviewDto updateReview(Long id, ReviewDto reviewDto);
     ReviewDto addReview(ReviewDto reviewDto);
+    void deleteReview(Long id);
 }
