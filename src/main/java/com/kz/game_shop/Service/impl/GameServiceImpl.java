@@ -26,14 +26,16 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public List<GameDto> getAllGames() {
-        List<Game> games = gameRepository.findAll();
-        List<GameDto> gameDtos = new ArrayList<>();
+//        List<Game> games = gameRepository.findAll();
+//        List<GameDto> gameDtos = new ArrayList<>();
+//
+//        for (Game game : games) {
+//            GameDto dto = gameMapper.toDto(game);
+//            dto.setRating(calculateRating(game.getReviews()));
+//        }
+//        return gameDtos;
 
-        for (Game game : games) {
-            GameDto dto = gameMapper.toDto(game);
-            dto.setRating(calculateRating(game.getReviews()));
-        }
-        return gameDtos;
+        return gameMapper.toDtoList(gameRepository.findAll());
     }
 
     @Override
