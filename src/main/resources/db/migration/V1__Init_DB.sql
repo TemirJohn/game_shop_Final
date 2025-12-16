@@ -18,6 +18,7 @@ CREATE TABLE users (
 CREATE TABLE game (
                       id BIGSERIAL PRIMARY KEY,
                       description VARCHAR(255),
+                      image_url VARCHAR(255),
                       price DOUBLE PRECISION,
                       title VARCHAR(255),
                       category_id BIGINT REFERENCES category(id)
