@@ -39,7 +39,6 @@ public class ReviewMapperTest {
         Assertions.assertEquals(review.getContent(), dto.getContent());
         Assertions.assertEquals(review.getRating(), dto.getRating());
 
-        // Проверка полей из связей
         Assertions.assertEquals(user.getId(), dto.getUserId());
         Assertions.assertEquals(user.getUsername(), dto.getUsername());
         Assertions.assertEquals(game.getId(), dto.getGameId());
@@ -61,7 +60,6 @@ public class ReviewMapperTest {
         Assertions.assertEquals(dto.getContent(), entity.getContent());
         Assertions.assertEquals(dto.getRating(), entity.getRating());
 
-        // User и Game игнорируются
         Assertions.assertNull(entity.getUser());
         Assertions.assertNull(entity.getGame());
     }

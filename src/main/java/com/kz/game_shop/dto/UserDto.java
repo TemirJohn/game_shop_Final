@@ -1,5 +1,6 @@
 package com.kz.game_shop.dto;
 
+import com.kz.game_shop.entity.Permission;
 import lombok.Data;
 import java.util.List;
 
@@ -9,5 +10,5 @@ public class UserDto {
     private String username;
     private String email;
     private String password;
-    private List<PermissionDto> permissions;
+    private List<Permission> permissions;
 }
