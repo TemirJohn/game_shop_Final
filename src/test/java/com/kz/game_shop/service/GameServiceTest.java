@@ -76,6 +76,27 @@ public class GameServiceTest {
         Assertions.assertEquals(categoryId, savedGame.getCategoryId());
     }
 
+    @Test
+    void updateGame() {
+        List<CategoryDto> categories = categoryService.getAllCategories();
+        if (categories.isEmpty()) return;
+
+        GameDto gameDto = new GameDto();
+        gameDto.setTitle("Original Title");
+        gameDto.setDescription("Desc");
+        gameDto.setPrice(10.0);
+        gameDto.setCategoryId(categories.get(0).getId());
+
+        GameDto saved = gameService.createGame(gameDto, null);
+
+        saved.setTitle("Updated Title");
+        saved.setPrice(20.0);
+
+        GameDto updated = gameService.updateGame(saved.getId(), saved);
+
+        Assertions.assertEquals("Updated Title", updated.getTitle());
+        Assertions.assertEquals(20.0, updated.getPrice());
+    }
 
     @Test
     void deleteGame() {
