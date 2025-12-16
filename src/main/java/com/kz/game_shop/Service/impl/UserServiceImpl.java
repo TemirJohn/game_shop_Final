@@ -64,11 +64,13 @@ public class UserServiceImpl implements UserDetailsService {
         }
     }
 
-    public UserDto getUserById(Long id) {
-        User user = userRepository.findById(id).orElse(null);
+    public UserDto getUserByUsername(String username) {
+        User user = userRepository.findByUsername(username).orElse(null);
         if (Objects.nonNull(user)) {
             return userMapper.toDto(user);
         }
         return null;
     }
+
+
 }
