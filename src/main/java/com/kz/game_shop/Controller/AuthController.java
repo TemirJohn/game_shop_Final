@@ -24,6 +24,8 @@ public class AuthController {
     public ResponseEntity<UserDto> login() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
+
+        UserDto user = userService.getUserByUsername(username);
         return ResponseEntity.ok().build();
     }
 }
