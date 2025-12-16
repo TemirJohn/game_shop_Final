@@ -2,21 +2,19 @@ package com.kz.game_shop.Controller;
 
 import com.kz.game_shop.Service.GameService;
 import com.kz.game_shop.dto.GameDto;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 @RestController
 @RequestMapping("/games")
-@RequiredArgsConstructor
 public class GameController {
 
-    private final GameService gameService;
+    @Autowired
+    private GameService gameService;
 
     @GetMapping
     public ResponseEntity<?> getAllGames() {
@@ -28,20 +26,14 @@ public class GameController {
         return new ResponseEntity<>(gameService.getGameById(id), HttpStatus.OK);
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> createGame(
-            @RequestParam("title") String title,
-            @RequestParam("description") String description,
-            @RequestParam("price") Double price,
-            @RequestParam("categoryId") Long categoryId
-    ) {
-        GameDto gameDto = new GameDto();
-        gameDto.setTitle(title);
-        gameDto.setDescription(description);
-        gameDto.setPrice(price);
-        gameDto.setCategoryId(categoryId);
-
+    @PostMapping
+    public ResponseEntity<?> createGame( @RequestBody GameDto gameDto) {
         return new ResponseEntity<>(gameService.createGame(gameDto), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateGame(@PathVariable Long id, @RequestBody GameDto gameDto) {
+        return new ResponseEntity<>(gameService.updateGame(id, gameDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

@@ -20,6 +20,6 @@ public class Game {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "game")
+    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
     private List<Review> reviews;
 }

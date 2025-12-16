@@ -18,7 +18,6 @@ CREATE TABLE users (
 CREATE TABLE game (
                       id BIGSERIAL PRIMARY KEY,
                       description VARCHAR(255),
-                      image_url VARCHAR(255),
                       price DOUBLE PRECISION,
                       title VARCHAR(255),
                       category_id BIGINT REFERENCES category(id)
@@ -41,6 +40,3 @@ CREATE TABLE user_games (
                             user_id BIGINT NOT NULL REFERENCES users(id),
                             game_id BIGINT NOT NULL REFERENCES game(id)
 );
-
-INSERT INTO permissions (name) VALUES ('ROLE_USER');
-INSERT INTO category (name) VALUES ('RPG'), ('Shooter'), ('Strategy');

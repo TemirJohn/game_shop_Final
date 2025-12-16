@@ -10,5 +10,8 @@ public interface UserMapper {
     UserDto toDto(User user);
 
     @Mapping(target = "permissions", ignore = true)
+    @Mapping(target = "games", ignore = true)
+    @Mapping(target = "reviews", ignore = true)
+    @Mapping(target = "authorities", ignore = true)
     User toEntity(UserDto userDto);
 }
