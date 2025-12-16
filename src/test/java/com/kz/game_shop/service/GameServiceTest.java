@@ -28,7 +28,6 @@ public class GameServiceTest {
             Assertions.assertNotNull(gameDto.getId());
             Assertions.assertNotNull(gameDto.getTitle());
             Assertions.assertNotNull(gameDto.getDescription());
-            // Проверяем связь с категорией, если она есть в DTO
             if (gameDto.getCategoryId() != null) {
                 Assertions.assertNotNull(gameDto.getCategoryId());
             }
