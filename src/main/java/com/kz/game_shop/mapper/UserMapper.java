@@ -5,7 +5,7 @@ import com.kz.game_shop.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {PermissionMapper.class})
+@Mapper(componentModel = "spring")
 public interface UserMapper {
     UserDto toDto(User user);
 

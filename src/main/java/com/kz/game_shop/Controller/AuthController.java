@@ -9,7 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -24,6 +24,8 @@ public class AuthController {
     public ResponseEntity<UserDto> login() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
+
+        UserDto user = userService.getUserByUsername(username);
         return ResponseEntity.ok().build();
     }
 }

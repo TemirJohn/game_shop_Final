@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-    private  CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
 
@@ -40,6 +40,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(Long id) {
-        return;
+        categoryRepository.deleteById(id);
     }
 }
