@@ -10,6 +10,7 @@ import java.util.List;
 public interface GameService {
     List<GameDto> getAllGames();
     GameDto getGameById(Long id);
-    GameDto createGame(GameDto game, MultipartFile imageFile) throws IOException;
+    GameDto createGame(GameDto game, MultipartFile imageFile);
+    GameDto updateGame(Long id, GameDto gameDto);
     void deleteGame(Long id);
 }

@@ -36,23 +36,37 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public GameDto getGameById(Long id) {
-        Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Game not found"));
+        Game game = gameRepository.findById(id).orElse(null);
         return gameMapper.toDto(game);
     }
 
 
-    public GameDto createGame(GameDto gameDto, MultipartFile imageFile) throws IOException {
+    public GameDto createGame(GameDto gameDto, MultipartFile imageFile) {
         Game game = gameMapper.toEntity(gameDto);
 
         if (gameDto.getCategoryId() != null) {
-            Category category = categoryRepository.findById(gameDto.getCategoryId())
-                    .orElseThrow(() -> new RuntimeException("Category not found"));
+            Category category = categoryRepository.findById(gameDto.getCategoryId()).orElse(null);
             game.setCategory(category);
         }
 
-
         Game savedGame = gameRepository.save(game);
+        return gameMapper.toDto(savedGame);
+    }
+
+    @Override
+    public GameDto updateGame(Long id, GameDto gameDto) {
+        Game existingGame = gameRepository.findById(id).orElse(null);
+
+        existingGame.setTitle(gameDto.getTitle());
+        existingGame.setDescription(gameDto.getDescription());
+        existingGame.setPrice(gameDto.getPrice());
+
+        if (gameDto.getCategoryId() != null) {
+            Category category = categoryRepository.findById(gameDto.getCategoryId()).orElse(null);
+            existingGame.setCategory(category);
+        }
+
+        Game savedGame = gameRepository.save(existingGame);
         return gameMapper.toDto(savedGame);
     }
 
