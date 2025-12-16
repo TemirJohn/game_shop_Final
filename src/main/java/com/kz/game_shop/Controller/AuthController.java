@@ -24,4 +24,5 @@ public class AuthController {
         userService.registr(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }

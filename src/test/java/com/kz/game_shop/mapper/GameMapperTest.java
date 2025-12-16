@@ -35,7 +35,6 @@ public class GameMapperTest {
         Assertions.assertEquals(game.getDescription(), dto.getDescription());
         Assertions.assertEquals(game.getPrice(), dto.getPrice());
 
-        Assertions.assertEquals(category.getId(), dto.getCategoryId());
 
         Assertions.assertNotNull(dto.getCategory());
         Assertions.assertEquals(category.getId(), dto.getCategory().getId());
@@ -49,7 +48,6 @@ public class GameMapperTest {
         dto.setTitle("Civilization VI");
         dto.setDescription("Strategy");
         dto.setPrice(50.0);
-        dto.setCategoryId(5L);
 
         Game entity = gameMapper.toEntity(dto);
 

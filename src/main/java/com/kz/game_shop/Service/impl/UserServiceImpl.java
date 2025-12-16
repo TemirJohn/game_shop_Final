@@ -1,9 +1,13 @@
 package com.kz.game_shop.Service.impl;
 
+import com.kz.game_shop.Repository.GameRepository;
 import com.kz.game_shop.Repository.PermissionRepo;
 import com.kz.game_shop.Repository.UserRepo;
+import com.kz.game_shop.dto.GameDto;
+import com.kz.game_shop.entity.Game;
 import com.kz.game_shop.entity.Permission;
 import com.kz.game_shop.entity.User;
+import com.kz.game_shop.mapper.GameMapper;
 import org.springframework.beans.factory.annotation.Autowired; // Важно: используем Autowired
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,9 +15,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserDetailsService {
@@ -22,7 +29,13 @@ public class UserServiceImpl implements UserDetailsService {
     private UserRepo userRepository;
 
     @Autowired
+    private GameRepository gameRepository;
+
+    @Autowired
     private PermissionRepo permissionRepository;
+
+    @Autowired
+    private GameMapper gameMapper;
 
     @Autowired
     @Lazy
@@ -48,5 +61,33 @@ public class UserServiceImpl implements UserDetailsService {
             }
             userRepository.save(user);
         }
+    }
+
+    @Transactional
+    public void buyGame(Long userId, Long gameId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new RuntimeException("Game not found"));
+
+        if (user.getGames() == null) {
+            user.setGames(new ArrayList<>());
+        }
+
+        if (!user.getGames().contains(game)) {
+            user.getGames().add(game);
+            userRepository.save(user);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<GameDto> getUserGames(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (user.getGames() == null) {
+            return new ArrayList<>();
+        }
+
+        return user.getGames().stream()
+                .map(gameMapper::toDto)
+                .collect(Collectors.toList());
     }
 }
