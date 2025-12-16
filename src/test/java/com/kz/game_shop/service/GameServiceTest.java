@@ -1,6 +1,8 @@
 package com.kz.game_shop.service;
 
+import com.kz.game_shop.Service.CategoryService;
 import com.kz.game_shop.Service.GameService;
+import com.kz.game_shop.dto.CategoryDto;
 import com.kz.game_shop.dto.GameDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,9 @@ public class GameServiceTest {
 
     @Autowired
     private GameService gameService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Test
     void getAllGames() {
@@ -50,6 +55,27 @@ public class GameServiceTest {
         Assertions.assertNotNull(gameDto.getTitle());
         Assertions.assertEquals(someIndex, gameDto.getId());
     }
+
+    @Test
+    void createGame() {
+        List<CategoryDto> categories = categoryService.getAllCategories();
+        Assertions.assertFalse(categories.isEmpty());
+        Long categoryId = categories.get(0).getId();
+
+        GameDto newGame = new GameDto();
+        newGame.setTitle("Test Game " + System.currentTimeMillis());
+        newGame.setDescription("Test Description");
+        newGame.setPrice(59.99);
+        newGame.setCategoryId(categoryId);
+
+        GameDto savedGame = gameService.createGame(newGame, null);
+
+        Assertions.assertNotNull(savedGame);
+        Assertions.assertNotNull(savedGame.getId());
+        Assertions.assertEquals(newGame.getTitle(), savedGame.getTitle());
+        Assertions.assertEquals(categoryId, savedGame.getCategoryId());
+    }
+
 
     @Test
     void deleteGame() {
