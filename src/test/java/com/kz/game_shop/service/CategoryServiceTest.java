@@ -2,6 +2,7 @@ package com.kz.game_shop.service;
 
 import com.kz.game_shop.Service.CategoryService;
 import com.kz.game_shop.dto.CategoryDto;
+import com.kz.game_shop.dto.GameDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,16 +60,14 @@ public class CategoryServiceTest {
 
     @Test
     void deleteCategory() {
-        Random random = new Random();
-        List<CategoryDto> allCategories = categoryService.getAllCategories();
-        Assertions.assertFalse(allCategories.isEmpty());
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setName("NEw");
 
-        int randomIndex = random.nextInt(allCategories.size());
-        Long someIndex = allCategories.get(randomIndex).getId();
+        CategoryDto saved = categoryService.createCategory(categoryDto);
+        Long idToDelete = saved.getId();
 
-        categoryService.deleteCategory(someIndex);
-
-        List<CategoryDto> categoriesAfterDelete = categoryService.getAllCategories();
-        Assertions.assertNull(categoriesAfterDelete);
+        categoryService.deleteCategory(idToDelete);
+        CategoryDto deletedCategory = categoryService.getCategoryById(idToDelete);
+        Assertions.assertNull(deletedCategory);
     }
 }
