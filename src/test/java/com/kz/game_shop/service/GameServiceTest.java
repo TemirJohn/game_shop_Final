@@ -33,9 +33,6 @@ public class GameServiceTest {
             Assertions.assertNotNull(gameDto.getId());
             Assertions.assertNotNull(gameDto.getTitle());
             Assertions.assertNotNull(gameDto.getDescription());
-            if (gameDto.getCategoryId() != null) {
-                Assertions.assertNotNull(gameDto.getCategoryId());
-            }
         }
     }
 
@@ -66,14 +63,12 @@ public class GameServiceTest {
         newGame.setTitle("Test Game " + System.currentTimeMillis());
         newGame.setDescription("Test Description");
         newGame.setPrice(59.99);
-        newGame.setCategoryId(categoryId);
 
-        GameDto savedGame = gameService.createGame(newGame, null);
+        GameDto savedGame = gameService.createGame(newGame);
 
         Assertions.assertNotNull(savedGame);
         Assertions.assertNotNull(savedGame.getId());
         Assertions.assertEquals(newGame.getTitle(), savedGame.getTitle());
-        Assertions.assertEquals(categoryId, savedGame.getCategoryId());
     }
 
     @Test
@@ -85,9 +80,8 @@ public class GameServiceTest {
         gameDto.setTitle("Original Title");
         gameDto.setDescription("Desc");
         gameDto.setPrice(10.0);
-        gameDto.setCategoryId(categories.get(0).getId());
 
-        GameDto saved = gameService.createGame(gameDto, null);
+        GameDto saved = gameService.createGame(gameDto);
 
         saved.setTitle("Updated Title");
         saved.setPrice(20.0);
