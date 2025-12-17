@@ -8,11 +8,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Random;
 
 @SpringBootTest
+@Transactional
 public class GameServiceTest {
 
     @Autowired
@@ -56,13 +58,23 @@ public class GameServiceTest {
     @Test
     void createGame() {
         List<CategoryDto> categories = categoryService.getAllCategories();
-        Assertions.assertFalse(categories.isEmpty());
-        Long categoryId = categories.get(0).getId();
+        Long categoryId;
+        if (categories.isEmpty()) {
+            CategoryDto newCat = new CategoryDto();
+            newCat.setName("Temp Category");
+            categoryId = categoryService.createCategory(newCat).getId();
+        } else {
+            categoryId = categories.get(0).getId();
+        }
 
         GameDto newGame = new GameDto();
         newGame.setTitle("Test Game " + System.currentTimeMillis());
         newGame.setDescription("Test Description");
         newGame.setPrice(59.99);
+
+        CategoryDto catDto = new CategoryDto();
+        catDto.setId(categoryId);
+        newGame.setCategory(catDto);
 
         GameDto savedGame = gameService.createGame(newGame);
 
@@ -81,6 +93,10 @@ public class GameServiceTest {
         gameDto.setDescription("Desc");
         gameDto.setPrice(10.0);
 
+        CategoryDto catDto = new CategoryDto();
+        catDto.setId(categories.get(0).getId());
+        gameDto.setCategory(catDto);
+
         GameDto saved = gameService.createGame(gameDto);
 
         saved.setTitle("Updated Title");
@@ -92,25 +108,18 @@ public class GameServiceTest {
         Assertions.assertEquals(20.0, updated.getPrice());
     }
 
-//    @Test
-//    void deleteGame() {
-//        ategoryDto category = getOrCreateCategory();
-//
-//        // 1. Создаем НОВУЮ игру специально для удаления.
-//        // У нее НЕТ отзывов, поэтому Foreign Key ошибка не вылетит.
-//        GameDto gameDto = new GameDto();
-//        gameDto.setTitle("Game To Delete");
-//        gameDto.setCategoryId(category.getId());
-//        GameDto saved = gameService.createGame(gameDto, null);
-//        Long id = saved.getId();
-//
-//        // 2. Удаляем
-//        gameService.deleteGame(id);
-//
-//        // 3. Проверяем, что игра больше не находится
-//        Assertions.assertThrows(RuntimeException.class, () -> {
-//            gameService.getGameById(id);
-//        });
-//
-//    }
+    @Test
+    void deleteGame() {
+        GameDto gameDto = new GameDto();
+        gameDto.setTitle("Game To Delete");
+        gameDto.setDescription("Desc");
+        gameDto.setPrice(10.0);
+
+        GameDto saved = gameService.createGame(gameDto);
+        Long idToDelete = saved.getId();
+
+        gameService.deleteGame(idToDelete);
+        GameDto deletedGame = gameService.getGameById(idToDelete);
+        Assertions.assertNull(deletedGame);
+    }
 }
