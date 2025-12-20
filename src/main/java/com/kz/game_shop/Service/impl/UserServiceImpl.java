@@ -4,10 +4,12 @@ import com.kz.game_shop.Repository.GameRepository;
 import com.kz.game_shop.Repository.PermissionRepo;
 import com.kz.game_shop.Repository.UserRepo;
 import com.kz.game_shop.dto.GameDto;
+import com.kz.game_shop.dto.UserDto;
 import com.kz.game_shop.entity.Game;
 import com.kz.game_shop.entity.Permission;
 import com.kz.game_shop.entity.User;
 import com.kz.game_shop.mapper.GameMapper;
+import com.kz.game_shop.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired; // Важно: используем Autowired
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +29,9 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRepo userRepository;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private GameRepository gameRepository;
@@ -89,5 +94,36 @@ public class UserServiceImpl implements UserDetailsService {
         return user.getGames().stream()
                 .map(gameMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void removeGame(Long userId, Long gameId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Game gameToRemove = null;
+
+        // Ищем игру в списке пользователя
+        if (user.getGames() != null) {
+            for (Game game : user.getGames()) {
+                if (game.getId().equals(gameId)) {
+                    gameToRemove = game;
+                    break;
+                }
+            }
+        }
+
+        if (gameToRemove != null) {
+            user.getGames().remove(gameToRemove);
+            userRepository.save(user);
+        } else {
+            throw new RuntimeException("Game not found in user library");
+        }
+    }
+
+    public UserDto getUserByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return userMapper.toDto(user);
     }
 }
