@@ -21,4 +21,14 @@ public class UserController {
     public ResponseEntity<?> getUserGames(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.getUserGames(userId));
     }
+
+    @DeleteMapping("/{userId}/games/{gameId}")
+    public ResponseEntity<?> returnGame(@PathVariable Long userId, @PathVariable Long gameId) {
+        try {
+            userService.removeGame(userId, gameId);
+            return ResponseEntity.ok("Game returned successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
