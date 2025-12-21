@@ -2,6 +2,7 @@ package com.kz.game_shop.service;
 
 import com.kz.game_shop.Service.CategoryService;
 import com.kz.game_shop.dto.CategoryDto;
+import com.kz.game_shop.dto.GameDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,20 +32,42 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void deleteCategory() {
-        Random random = new Random();
+    void getCategoryById() {
         List<CategoryDto> allCategories = categoryService.getAllCategories();
         Assertions.assertFalse(allCategories.isEmpty());
 
-        int randomIndex = random.nextInt(allCategories.size());
-        Long someIndex = allCategories.get(randomIndex).getId();
+        CategoryDto randomCategory = allCategories.get(new Random().nextInt(allCategories.size()));
 
-        categoryService.deleteCategory(someIndex);
+        CategoryDto fetchedCategory = categoryService.getCategoryById(randomCategory.getId());
 
-        List<CategoryDto> categoriesAfterDelete = categoryService.getAllCategories();
-        boolean exists = categoriesAfterDelete.stream()
-                .anyMatch(c -> c.getId().equals(someIndex));
+        Assertions.assertNotNull(fetchedCategory);
+        Assertions.assertEquals(randomCategory.getId(), fetchedCategory.getId());
+        Assertions.assertEquals(randomCategory.getName(), fetchedCategory.getName());
+    }
 
-        Assertions.assertFalse(exists);
+    @Test
+    void updateCategory() {
+        CategoryDto dto = new CategoryDto();
+        dto.setName("Old Name");
+        CategoryDto saved = categoryService.createCategory(dto);
+
+        saved.setName("Updated Name");
+        CategoryDto updated = categoryService.updateCategory(saved.getId(), saved);
+
+        Assertions.assertEquals("Updated Name", updated.getName());
+        Assertions.assertEquals(saved.getId(), updated.getId());
+    }
+
+    @Test
+    void deleteCategory() {
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setName("NEw");
+
+        CategoryDto saved = categoryService.createCategory(categoryDto);
+        Long idToDelete = saved.getId();
+
+        categoryService.deleteCategory(idToDelete);
+        CategoryDto deletedCategory = categoryService.getCategoryById(idToDelete);
+        Assertions.assertNull(deletedCategory);
     }
 }

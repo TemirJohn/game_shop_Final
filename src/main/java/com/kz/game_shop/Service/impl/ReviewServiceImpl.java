@@ -38,11 +38,16 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    public ReviewDto getReviewById(Long id) {
+        Review review = reviewRepository.findById(id).orElse(null);
+        return reviewMapper.toDto(review);
+    }
+
+
+    @Override
     public ReviewDto addReview(ReviewDto reviewDto) {
-        User user = userRepository.findById(reviewDto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        Game game = gameRepository.findById(reviewDto.getGameId())
-                .orElseThrow(() -> new RuntimeException("Game not found"));
+        User user = userRepository.findById(reviewDto.getUserId()).orElse(null);
+        Game game = gameRepository.findById(reviewDto.getGameId()).orElse(null);
 
         Review review = reviewMapper.toEntity(reviewDto);
         review.setUser(user);
@@ -50,5 +55,21 @@ public class ReviewServiceImpl implements ReviewService {
 
         Review savedReview = reviewRepository.save(review);
         return reviewMapper.toDto(savedReview);
+    }
+
+    @Override
+    public ReviewDto updateReview(Long id, ReviewDto reviewDto) {
+        Review existingReview = reviewRepository.findById(id).orElse(null);
+
+        existingReview.setContent(reviewDto.getContent());
+        existingReview.setRating(reviewDto.getRating());
+
+        Review savedReview = reviewRepository.save(existingReview);
+        return reviewMapper.toDto(savedReview);
+    }
+
+    @Override
+    public void deleteReview(Long id) {
+        reviewRepository.deleteById(id);
     }
 }

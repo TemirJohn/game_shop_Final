@@ -8,8 +8,6 @@ public class GameDto {
     private String title;
     private String description;
     private Double price;
-
-    private Long categoryId;
-
     private CategoryDto category;
+    private Double rating;
 }

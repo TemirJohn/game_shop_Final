@@ -41,6 +41,3 @@ CREATE TABLE user_games (
                             user_id BIGINT NOT NULL REFERENCES users(id),
                             game_id BIGINT NOT NULL REFERENCES game(id)
 );
-
-INSERT INTO permissions (name) VALUES ('ROLE_USER');
-INSERT INTO category (name) VALUES ('RPG'), ('Shooter'), ('Strategy');
