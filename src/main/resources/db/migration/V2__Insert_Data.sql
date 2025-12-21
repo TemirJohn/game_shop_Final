@@ -1,7 +1,6 @@
 INSERT INTO category (id, name) VALUES (1, 'RPG');
 INSERT INTO category (id, name) VALUES (2, 'Shooter');
 INSERT INTO category (id, name) VALUES (3, 'Strategy');
-SELECT setval('category_id_seq', (SELECT MAX(id) FROM category));
 
 INSERT INTO permissions (id, name) VALUES (1, 'ROLE_USER');
 INSERT INTO permissions (id, name) VALUES (2, 'ROLE_ADMIN');
@@ -12,7 +11,6 @@ VALUES (1, 'admin', 'admin@game.kz', 'admin123');
 
 INSERT INTO users (id, username, email, password)
 VALUES (2, 'gamer_pro', 'gamer@game.kz', 'gamer123');
-SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
 
 INSERT INTO user_permissions (user_id, permission_id) VALUES (1, 2);
 INSERT INTO user_permissions (user_id, permission_id) VALUES (2, 1);

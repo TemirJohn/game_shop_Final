@@ -10,7 +10,7 @@ import com.kz.game_shop.entity.Permission;
 import com.kz.game_shop.entity.User;
 import com.kz.game_shop.mapper.GameMapper;
 import com.kz.game_shop.mapper.UserMapper;
-import org.springframework.beans.factory.annotation.Autowired; // Важно: используем Autowired
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -98,12 +98,10 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Transactional
     public void removeGame(Long userId, Long gameId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElse(null);
 
         Game gameToRemove = null;
 
-        // Ищем игру в списке пользователя
         if (user.getGames() != null) {
             for (Game game : user.getGames()) {
                 if (game.getId().equals(gameId)) {
@@ -122,8 +120,7 @@ public class UserServiceImpl implements UserDetailsService {
     }
 
     public UserDto getUserByUsername(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByUsername(username).orElse(null);
         return userMapper.toDto(user);
     }
 }

@@ -5,6 +5,7 @@ import com.kz.game_shop.Repository.PermissionRepo;
 import com.kz.game_shop.Repository.UserRepo;
 import com.kz.game_shop.Service.impl.UserServiceImpl;
 import com.kz.game_shop.dto.GameDto;
+import com.kz.game_shop.dto.UserDto;
 import com.kz.game_shop.entity.Game;
 import com.kz.game_shop.entity.Permission;
 import com.kz.game_shop.entity.User;
@@ -136,5 +137,44 @@ public class UserServiceTest {
 
         Assertions.assertTrue(hasGame1);
         Assertions.assertTrue(hasGame2);
+    }
+
+    @Test
+    void getUserByUsername() {
+        User user = new User();
+        String username = "searchUser_" + System.currentTimeMillis();
+        user.setUsername(username);
+        user.setEmail("search@test.com");
+        user.setPassword("password");
+        userRepo.save(user);
+
+        UserDto foundUser = userService.getUserByUsername(username);
+
+        Assertions.assertNotNull(foundUser);
+        Assertions.assertEquals(username, foundUser.getUsername());
+        Assertions.assertEquals("search@test.com", foundUser.getEmail());
+    }
+
+    @Test
+    void removeGame_Success() {
+        User user = new User();
+        user.setUsername("gamer_remove_" + System.currentTimeMillis());
+        user.setEmail("remove@test.com");
+        user.setPassword("pass");
+        userRepo.save(user);
+
+        Game game = new Game();
+        game.setTitle("Game To Remove");
+        game.setPrice(50.0);
+        gameRepository.save(game);
+
+        userService.buyGame(user.getId(), game.getId());
+
+        Assertions.assertEquals(1, userService.getUserGames(user.getId()).size());
+
+        userService.removeGame(user.getId(), game.getId());
+
+        List<GameDto> remainingGames = userService.getUserGames(user.getId());
+        Assertions.assertTrue(remainingGames.isEmpty());
     }
 }
